@@ -1,3 +1,5 @@
+use once_cell::sync::Lazy;
+use serde::Deserialize;
 use telers::{
     Bot, Dispatcher, Router,
     enums::UpdateType,
@@ -8,15 +10,27 @@ use telers::{
 use tracing::{Level, event};
 use tracing_subscriber::{EnvFilter, fmt, layer::SubscriberExt as _, util::SubscriberInitExt as _};
 
-const CHANNEL_ID: i64 = -1002193370548; // @opensource_findings_python
-const CHAT_ID: i64 = -1002216851397; // @opensource_findings_chat
+#[derive(Deserialize, Debug)]
+pub struct AppConfig {
+    token: String,
+    from_id: i64,
+    to_id: i64,
+}
 
-const TOKEN: &str = "...";
+pub static CONFIG: Lazy<AppConfig> = Lazy::new(|| {
+    envy::prefixed("FB_")
+        .from_env::<AppConfig>()
+        .expect("cannot load env")
+});
 
 async fn forward_message(bot: Bot, message: Message) -> HandlerResult {
-    if message.chat().id() == CHANNEL_ID {
-        bot.send(ForwardMessage::new(CHAT_ID, CHANNEL_ID, message.id()))
-            .await?;
+    if message.chat().id() == CONFIG.from_id {
+        bot.send(ForwardMessage::new(
+            CONFIG.to_id,
+            CONFIG.from_id,
+            message.id(),
+        ))
+        .await?;
     }
 
     Ok(EventReturn::Finish)
@@ -29,10 +43,13 @@ async fn main() {
         .with(EnvFilter::new("INFO"))
         .init();
 
-    let bot = Bot::new(TOKEN);
+    let bot = Bot::new(&CONFIG.token);
 
-    let mut router = Router::new("main");
-    router.channel_post.register(forward_message);
+    let router = {
+        let mut r = Router::new("main");
+        r.channel_post.register(forward_message);
+        r
+    };
 
     let dispatcher = Dispatcher::builder()
         .main_router(router.configure_default())
