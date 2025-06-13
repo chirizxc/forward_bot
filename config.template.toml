@@ -1,0 +1,9 @@
+[bot]
+token = "..."
+
+[chat]
+from_id = 123
+to_id = 123
+
+[logging]
+dirs = "forward_bot=info"
