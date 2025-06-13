@@ -91,8 +91,6 @@ checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 name = "bot"
 version = "1.0.0"
 dependencies = [
- "envy",
- "once_cell",
  "serde",
  "telers",
  "thiserror",
@@ -192,13 +190,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "envy"
-version = "0.4.2"
+name = "dyn-clone"
+version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f47e0157f2cb54f5ae1bd371b30a2ae4311e1c028f575cd4e81de7353215965"
-dependencies = [
- "serde",
-]
+checksum = "1c7a8fb8a9fbf66c1f703fe16184d10ca0ee9d23be5b4436400408ba54a95005"
 
 [[package]]
 name = "equivalent"
@@ -625,9 +620,9 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
-version = "0.2.172"
+version = "0.2.173"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d750af042f7ef4f724306de029d18836c26c1765a54a6a3f094cbd23a7267ffa"
+checksum = "d8cfeafaffdbc32176b64fb251369d52ea9f0a8fbc6f8759edffef7b525d64bb"
 
 [[package]]
 name = "linux-raw-sys"
@@ -1243,13 +1238,15 @@ checksum = "20f34339676cdcab560c9a82300c4c2581f68b9369aedf0fae86f2ff9565ff3e"
 
 [[package]]
 name = "telers"
-version = "1.0.0-alpha.24"
-source = "git+https://github.com/Desiders/telers.git?rev=66cce11018f9f3e8b4218697413d90e4c7253825#66cce11018f9f3e8b4218697413d90e4c7253825"
+version = "1.0.0-alpha.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "602990c9702987b54c1406229c12256b8d58356c2d0ab8365fb9be174a68bb97"
 dependencies = [
  "anyhow",
  "async-trait",
  "backoff",
  "bytes",
+ "dyn-clone",
  "futures-util",
  "once_cell",
  "pathdiff",
@@ -1273,7 +1270,8 @@ dependencies = [
 [[package]]
 name = "telers-macros"
 version = "1.0.0-alpha.3"
-source = "git+https://github.com/Desiders/telers.git?rev=66cce11018f9f3e8b4218697413d90e4c7253825#66cce11018f9f3e8b4218697413d90e4c7253825"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae25c7a6322ef30dc891ed35f0220933de86508af44c51f4dd3b9920b982fe6d"
 dependencies = [
  "proc-macro2",
  "quote",
