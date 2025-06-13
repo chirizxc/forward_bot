@@ -18,8 +18,13 @@ async fn forward_message(
     Extension(ChatConfig { from_id, to_id }): Extension<ChatConfig>,
 ) -> HandlerResult {
     if message.chat().id() == from_id {
-        bot.send(ForwardMessage::new(to_id, from_id, message.id()))
+        event!(Level::INFO, id = message.id(), "Forwarding message");
+
+        let sent_message = bot
+            .send(ForwardMessage::new(to_id, from_id, message.id()))
             .await?;
+
+        event!(Level::INFO, id = sent_message.id(), "Message forwarded");
     }
 
     Ok(EventReturn::Finish)
