@@ -1,7 +1,7 @@
-use once_cell::sync::Lazy;
-use serde::Deserialize;
+mod config;
+
 use telers::{
-    Bot, Dispatcher, Router,
+    Bot, Dispatcher, Extension, Router,
     enums::UpdateType,
     event::{EventReturn, telegram::HandlerResult},
     methods::ForwardMessage,
@@ -10,27 +10,16 @@ use telers::{
 use tracing::{Level, event};
 use tracing_subscriber::{EnvFilter, fmt, layer::SubscriberExt as _, util::SubscriberInitExt as _};
 
-#[derive(Deserialize, Debug)]
-pub struct AppConfig {
-    token: String,
-    from_id: i64,
-    to_id: i64,
-}
+use crate::config::{BotConfig, ChatConfig, Config, LoggingConfig};
 
-pub static CONFIG: Lazy<AppConfig> = Lazy::new(|| {
-    envy::prefixed("FB_")
-        .from_env::<AppConfig>()
-        .expect("cannot load env")
-});
-
-async fn forward_message(bot: Bot, message: Message) -> HandlerResult {
-    if message.chat().id() == CONFIG.from_id {
-        bot.send(ForwardMessage::new(
-            CONFIG.to_id,
-            CONFIG.from_id,
-            message.id(),
-        ))
-        .await?;
+async fn forward_message(
+    bot: Bot,
+    message: Message,
+    Extension(ChatConfig { from_id, to_id }): Extension<ChatConfig>,
+) -> HandlerResult {
+    if message.chat().id() == from_id {
+        bot.send(ForwardMessage::new(to_id, from_id, message.id()))
+            .await?;
     }
 
     Ok(EventReturn::Finish)
@@ -38,12 +27,18 @@ async fn forward_message(bot: Bot, message: Message) -> HandlerResult {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
+    let Config {
+        bot: BotConfig { token },
+        chat,
+        logging: LoggingConfig { dirs },
+    } = config::parse_from_fs(&*config::get_path()).unwrap();
+
     tracing_subscriber::registry()
         .with(fmt::layer())
-        .with(EnvFilter::new("INFO"))
+        .with(EnvFilter::builder().parse_lossy(dirs))
         .init();
 
-    let bot = Bot::new(&CONFIG.token);
+    let bot = Bot::new(token);
 
     let router = {
         let mut r = Router::new("main");
@@ -55,6 +50,7 @@ async fn main() {
         .main_router(router.configure_default())
         .bot(bot)
         .allowed_update(UpdateType::ChannelPost)
+        .extension(chat)
         .build();
 
     match dispatcher.run_polling().await {
