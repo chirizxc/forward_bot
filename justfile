@@ -37,6 +37,6 @@ fmt:
     docker rm forward_bot
 
 @docker:
-    just docker-stop > /dev/null 2>&1 || true
-    just docker-rm > /dev/null 2>&1 || true
+    just docker-stop >/dev/null 2>&1 || true
+    just docker-rm >/dev/null 2>&1 || true
     just docker-run
