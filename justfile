@@ -24,11 +24,11 @@ fmt:
 @docker-build VERSION="latest":
     docker build -t forward_bot:{{VERSION}} .
 
-@docker-run:
+@docker-run VERSION="latest":
     docker run --rm -it \
         -v $(pwd)/config.toml:/app/config.toml \
         --name forward_bot \
-        forward_bot
+        forward_bot:{{VERSION}}
 
 @docker-stop:
     docker stop forward_bot
@@ -36,10 +36,10 @@ fmt:
 @docker-rm: docker-stop
     docker rm forward_bot
 
-docker:
+docker VERSION="latest":
     @just docker-stop >/dev/null 2>&1 || true
     @just docker-rm >/dev/null 2>&1 || true
-    @just docker-run
+    @just docker-run {{VERSION}}
 
 @docker-up:
     docker compose up
