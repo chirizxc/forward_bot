@@ -1,0 +1,13 @@
+services:
+  bot:
+    container_name: "forward_bot"
+    image: "forward_bot:latest"
+    restart: "unless-stopped"
+    build:
+      context: .
+    environment:
+      - CONFIG_PATH=${CONFIG_PATH:-config.toml}
+    volumes:
+      - type: bind
+        source: ./config.toml
+        target: /app/config.toml
