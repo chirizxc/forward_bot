@@ -13,13 +13,11 @@ COPY Cargo.toml Cargo.lock ./
 # Create a dummy `main.rs` to allow cargo to cache dependencies
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 RUN cargo build --release --target x86_64-unknown-linux-musl --locked
-# This is a workaround to build all source files in the `build-src` stage,
-# because without it `main.rs` is the only file that gets cached and we should to run `touch` on it or remove it (as we do here)
-RUN rm src/main.rs
 
 FROM build-deps AS build-src
 WORKDIR /usr/src/app
 COPY ./src ./src
+RUN touch src/main.rs
 RUN cargo build --release --target x86_64-unknown-linux-musl --locked
 RUN upx --best --lzma target/x86_64-unknown-linux-musl/release/bot
 
