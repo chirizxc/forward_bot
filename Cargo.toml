@@ -1,9 +1,11 @@
 cargo-features = ["edition2024"]
 
 [package]
-name = "bot"
+name = "forward_bot"
 version = "1.0.0"
 edition = "2024"
+license = "Unlicense"
+repository = "https://github.com/chirizxc/forward_bot"
 
 [dependencies]
 telers = { version = "1.0.0-alpha.25", features = ["default_signal", "std", "rustls-tls"], default-features = false }
