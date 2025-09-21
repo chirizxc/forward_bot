@@ -1,11 +1,5 @@
-reorder_imports = true
-reorder_modules = true
 edition = "2024"
-max_width = 100
-fn_params_layout = "Tall"
-hard_tabs = false
-merge_derives = true
-remove_nested_parens = true
-tab_spaces = 4
-use_field_init_shorthand = true
+
+reorder_imports = true
 use_try_shorthand = true
+use_field_init_shorthand = true
