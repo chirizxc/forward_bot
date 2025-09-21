@@ -2,7 +2,7 @@
 name = "forward_bot"
 version = "1.0.0"
 edition = "2024"
-rust-version = "1.90.0"
+rust-version = "1.89.0"
 license = "Unlicense"
 repository = "https://github.com/chirizxc/forward_bot"
 
