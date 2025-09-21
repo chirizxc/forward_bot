@@ -1,0 +1,23 @@
+# Example configuration showing how to forward messages
+# from one source channel to multiple destinations
+
+[bot]
+token = "YOUR_BOT_TOKEN_HERE"
+
+# Forwarding from one channel to multiple destinations (array syntax)
+[[chats]]
+from_id = -1001234567890  # Source channel
+to_id = [-1009876543210, -1008888888888, -1007777777777]  # Multiple destination channels
+
+# You can still use single destination (backward compatible)
+[[chats]]
+from_id = -1005555555555  # Another source channel
+to_id = -1004444444444    # Single destination channel
+
+# Another one-to-many forwarding example
+[[chats]]
+from_id = -1003333333333  # Source channel
+to_id = [-1002222222222, -1001111111111]  # Two destination channels
+
+[logging]
+dirs = "bot=debug,info"
