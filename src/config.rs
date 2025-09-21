@@ -14,9 +14,25 @@ pub struct BotConfig {
 }
 
 #[derive(Deserialize, Clone)]
+#[serde(untagged)]
+pub enum ToIdKind {
+    Single(i64),
+    Multiple(Vec<i64>),
+}
+
+impl ToIdKind {
+    pub fn as_slice(&self) -> &[i64] {
+        match self {
+            Self::Single(id) => std::slice::from_ref(id),
+            Self::Multiple(ids) => ids,
+        }
+    }
+}
+
+#[derive(Deserialize, Clone)]
 pub struct ChatConfig {
     pub from_id: i64,
-    pub to_id: i64,
+    pub to_id: ToIdKind,
 }
 
 #[derive(Deserialize, Clone)]
@@ -27,7 +43,7 @@ pub struct LoggingConfig {
 #[derive(Deserialize, Clone)]
 pub struct Config {
     pub bot: BotConfig,
-    pub chat: ChatConfig,
+    pub chats: Vec<ChatConfig>,
     pub logging: LoggingConfig,
 }
 

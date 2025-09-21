@@ -1,9 +1,14 @@
 [bot]
-token = "..."
+token = "42:ABC"
 
-[chat]
-from_id = 123
-to_id = 123
+[[chats]]
+from_id = -1000000000001
+to_id = -1000000000002
+
+[[chats]]
+from_id = -1000000000005
+to_id = [-1000000000006, -1000000000007]
+
 
 [logging]
 dirs = "bot=debug,info"
