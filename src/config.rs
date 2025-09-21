@@ -1,5 +1,3 @@
-#![allow(clippy::module_name_repetitions)]
-
 use serde::Deserialize;
 use std::{
     env::{self, VarError},
