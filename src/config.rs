@@ -27,7 +27,7 @@ pub struct LoggingConfig {
 #[derive(Deserialize, Clone)]
 pub struct Config {
     pub bot: BotConfig,
-    pub chat: ChatConfig,
+    pub chats: Vec<ChatConfig>,
     pub logging: LoggingConfig,
 }
 

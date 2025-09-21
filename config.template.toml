@@ -1,9 +1,13 @@
 [bot]
 token = "..."
 
-[chat]
+[[chats]]
 from_id = 123
-to_id = 123
+to_id = 456
+
+[[chats]]
+from_id = 789
+to_id = 101112
 
 [logging]
 dirs = "bot=debug,info"

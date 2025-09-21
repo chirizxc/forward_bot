@@ -15,16 +15,20 @@ use crate::config::{BotConfig, ChatConfig, Config, LoggingConfig};
 async fn forward_message(
     bot: Bot,
     message: Message,
-    Extension(ChatConfig { from_id, to_id }): Extension<ChatConfig>,
+    Extension(chats): Extension<Vec<ChatConfig>>,
 ) -> HandlerResult {
-    if message.chat().id() == from_id {
-        event!(Level::INFO, id = message.id(), "Forwarding message");
+    let chat_id = message.chat().id();
 
-        let sent_message = bot
-            .send(ForwardMessage::new(to_id, from_id, message.id()))
-            .await?;
+    for ChatConfig { from_id, to_id } in chats {
+        if chat_id == from_id {
+            event!(Level::INFO, id = message.id(), from = from_id, to = to_id, "Forwarding message");
 
-        event!(Level::INFO, id = sent_message.id(), "Message forwarded");
+            let sent_message = bot
+                .send(ForwardMessage::new(to_id, from_id, message.id()))
+                .await?;
+
+            event!(Level::INFO, id = sent_message.id(), from = from_id, to = to_id, "Message forwarded");
+        }
     }
 
     Ok(EventReturn::Finish)
@@ -34,7 +38,7 @@ async fn forward_message(
 async fn main() {
     let Config {
         bot: BotConfig { token },
-        chat,
+        chats,
         logging: LoggingConfig { dirs },
     } = config::parse_from_fs(&*config::get_path()).unwrap();
 
@@ -55,7 +59,7 @@ async fn main() {
         .main_router(router.configure_default())
         .bot(bot)
         .allowed_update(UpdateType::ChannelPost)
-        .extension(chat)
+        .extension(chats)
         .build();
 
     match dispatcher.run_polling().await {
