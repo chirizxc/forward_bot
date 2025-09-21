@@ -1,5 +1,3 @@
-cargo-features = ["edition2024"]
-
 [package]
 name = "forward_bot"
 version = "1.0.0"
@@ -9,13 +7,17 @@ license = "Unlicense"
 repository = "https://github.com/chirizxc/forward_bot"
 
 [dependencies]
-telers = { version = "1.0.0-alpha.25", features = ["default_signal", "std", "rustls-tls"], default-features = false }
-tokio = { version = "1.36", features = ["macros"] }
+telers = { version = "1.0.0-alpha.26", default-features = false, features = [
+    "default_signal",
+    "rustls-tls",
+    "std",
+]}
+tokio = { version = "1.47", default-features = false, features = ["macros"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-serde = { version = "1.0", features = ["derive"] }
-thiserror = "2.0"
-toml = "0.8"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+toml = "0.9.7"
 
 [profile.release]
 opt-level = 3
