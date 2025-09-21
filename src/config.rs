@@ -1,7 +1,6 @@
 use serde::Deserialize;
 use std::{
     env::{self, VarError},
-    fs, io,
     path::Path,
 };
 use thiserror::Error;
@@ -48,7 +47,7 @@ pub struct Config {
 #[derive(Error, Debug)]
 pub enum ParseError {
     #[error(transparent)]
-    IO(#[from] io::Error),
+    IO(#[from] std::io::Error),
     #[error(transparent)]
     Toml(#[from] toml::de::Error),
 }
@@ -70,7 +69,7 @@ pub fn get_path() -> Box<str> {
 
 #[allow(clippy::missing_errors_doc)]
 pub fn parse_from_fs(path: impl AsRef<Path>) -> Result<Config, ParseError> {
-    let raw = fs::read_to_string(path)?;
+    let raw = std::fs::read_to_string(path)?;
 
     toml::from_str(&raw).map_err(Into::into)
 }
