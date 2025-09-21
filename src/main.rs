@@ -21,30 +21,20 @@ async fn forward_message(
 
     for ChatConfig { from_id, to_id } in chats {
         if chat_id == from_id {
-            for &destination_id in to_id.as_slice() {
-                event!(
-                    Level::INFO,
-                    id = message.id(),
-                    from = from_id,
-                    to = destination_id,
-                    "Forwarding message"
-                );
-
+            for &to in to_id.as_slice() {
                 let sent_message = bot
-                    .send(ForwardMessage::new(destination_id, from_id, message.id()))
+                    .send(ForwardMessage::new(to, from_id, message.id()))
                     .await?;
-
                 event!(
                     Level::INFO,
-                    id = sent_message.id(),
-                    from = from_id,
-                    to = destination_id,
-                    "Message forwarded"
+                    "Message forwarded from {} to {} (message_id={})",
+                    from_id,
+                    to,
+                    sent_message.id()
                 );
             }
         }
     }
-
     Ok(EventReturn::Finish)
 }
 
