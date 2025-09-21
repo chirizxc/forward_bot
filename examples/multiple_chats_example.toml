@@ -1,0 +1,26 @@
+# Example configuration showing how to forward messages
+# from multiple source channels to different destinations
+
+[bot]
+token = "YOUR_BOT_TOKEN_HERE"
+
+# First forwarding rule: Channel A to Channel B
+[[chats]]
+from_id = -1001234567890  # Source channel A
+to_id = -1009876543210    # Destination channel B
+
+# Second forwarding rule: Channel C to Channel D
+[[chats]]
+from_id = -1005555555555  # Source channel C
+to_id = -1004444444444    # Destination channel D
+
+# Third forwarding rule: Channel E to Channel F
+[[chats]]
+from_id = -1003333333333  # Source channel E
+to_id = -1002222222222    # Destination channel F
+
+# You can add as many forwarding rules as needed
+# Each [[chats]] section represents one forwarding configuration
+
+[logging]
+dirs = "bot=debug,info"
