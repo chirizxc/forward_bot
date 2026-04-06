@@ -11,9 +11,9 @@ telers = {
     version = "=1.0.0-beta.2",
     default-features = false,
     features = [
-        "default_signal",
-        "rustls-tls",
         "std",
+        "rustls-tls",
+        "default_signal",
     ],
 }
 tokio = {
