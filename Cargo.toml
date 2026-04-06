@@ -1,27 +1,48 @@
 [package]
 name = "forward_bot"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2024"
-rust-version = "1.89.0"
+rust-version = "1.94.0"
 license = "Unlicense"
 repository = "https://github.com/chirizxc/forward_bot"
 
 [dependencies]
-telers = { version = "1.0.0-alpha.26", default-features = false, features = [
-    "default_signal",
-    "rustls-tls",
-    "std",
-]}
-tokio = { version = "1.47", default-features = false, features = ["macros"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-serde = { version = "1", features = ["derive"] }
-thiserror = "2"
-toml = "0.9.7"
+telers = {
+    path = "telers-dev-1.x/telers",
+    version = "=1.0.0-beta.2",
+    default-features = false,
+    features = [
+        "default_signal",
+        "rustls-tls",
+        "std",
+    ],
+}
+tokio = {
+    version = "=1.51.0",
+    default-features = false,
+    features = ["macros"],
+}
+tracing = "=0.1.44"
+tracing-subscriber = { version = "=0.3.23", features = ["env-filter"] }
+serde = {
+    version = "=1.0.228",
+    features = ["derive"]
+}
+thiserror = "=2.0.18"
+toml = "=1.1.2"
 
 [profile.release]
-opt-level = 3
-lto = true
-codegen-units = 1
+lto = "fat"
 panic = "unwind"
-strip = true
+strip = "symbols"
+codegen-units = 1
+
+[lints]
+rust.warnings = { level = "deny" }
+clippy.perf = { level = "deny", priority = -1 }
+clippy.style = { level = "warn", priority = -1 }
+clippy.pedantic = { level = "warn", priority = -1 }
+
+clippy.too_many_lines = "allow"
+clippy.manual_let_else = "allow"
+clippy.cast_possible_truncation = "allow"

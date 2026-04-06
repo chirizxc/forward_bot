@@ -1,8 +1,9 @@
-use serde::Deserialize;
 use std::{
     env::{self, VarError},
     path::Path,
 };
+
+use serde::Deserialize;
 use thiserror::Error;
 
 #[derive(Deserialize, Clone)]

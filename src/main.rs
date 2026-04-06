@@ -3,8 +3,7 @@ mod config;
 use telers::{
     Bot, Dispatcher, Extension, Router,
     enums::UpdateType,
-    event::{EventReturn, telegram::HandlerResult},
-    methods::ForwardMessage,
+    event::telegram::{Handler, HandlerResult},
     types::Message,
 };
 use tracing::{Level, event};
@@ -16,26 +15,24 @@ async fn forward_message(
     bot: Bot,
     message: Message,
     Extension(chats): Extension<Vec<ChatConfig>>,
-) -> HandlerResult {
+) -> HandlerResult<()> {
     let chat_id = message.chat().id();
 
     for ChatConfig { from_id, to_id } in chats {
         if chat_id == from_id {
             for &to in to_id.as_slice() {
-                let sent_message = bot
-                    .send(ForwardMessage::new(to, from_id, message.id()))
-                    .await?;
+                let sent_message = bot.send(message.to_forward_message(to)).await?;
                 event!(
                     Level::INFO,
                     "Message forwarded from {} to {} (message_id={})",
                     from_id,
                     to,
-                    sent_message.id()
+                    sent_message.message_id()
                 );
             }
         }
     }
-    Ok(EventReturn::Finish)
+    Ok(())
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -53,11 +50,8 @@ async fn main() {
 
     let bot = Bot::new(token);
 
-    let router = {
-        let mut r = Router::new("main");
-        r.channel_post.register(forward_message);
-        r
-    };
+    let router = Router::new("main")
+        .on_channel_post(|observer| observer.register(Handler::new(forward_message)));
 
     let dispatcher = Dispatcher::builder()
         .main_router(router.configure_default())

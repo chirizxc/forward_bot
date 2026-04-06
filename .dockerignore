@@ -10,7 +10,7 @@ README.md
 
 **/target
 
-config.template.toml
+example.config.toml
 rustfmt.toml
 justfile
 
