@@ -8,7 +8,6 @@ repository = "https://github.com/chirizxc/forward_bot"
 
 [dependencies]
 telers = {
-    path = "telers-dev-1.x/telers",
     version = "=1.0.0-beta.2",
     default-features = false,
     features = [
