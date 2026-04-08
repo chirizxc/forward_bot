@@ -1,4 +1,4 @@
-FROM rust:1.87-slim-bullseye AS build-deps
+FROM rust:1.94-slim-bullseye AS build-deps
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         musl-tools \

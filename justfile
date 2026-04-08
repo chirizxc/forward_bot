@@ -1,10 +1,12 @@
-host := `uname -a`
+set shell := ["sh", "-c"]
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
 
-help:
-    just -l
+[private]
+@default:
+    just --list
 
 clippy:
-    cargo clippy --all --all-features -- -W clippy::pedantic
+    cargo clippy --all --all-features
 
 fmt:
     cargo fmt --all -- --check
