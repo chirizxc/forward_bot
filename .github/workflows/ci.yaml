@@ -24,8 +24,8 @@ jobs:
     name: "zizmor"
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       actions: read
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -56,12 +56,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: "Install Rust nightly + rustfmt"
-        run: rustup toolchain install nightly --component rustfmt
-
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+      - uses: dtolnay/rust-toolchain@nightly # zizmor: ignore[unpinned-uses]
         with:
-          lookup-only: true
+          components: rustfmt
+
       - run: cargo fmt-nightly --check
 
   cargo-clippy:
@@ -73,12 +71,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: "Install Rust nightly + clippy"
-        run: rustup toolchain install nightly --component clippy
-
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        if: github.event_name == 'pull_request'
         with:
-          lookup-only: true
+          lookup-only: false # zizmor: ignore[cache-poisoning]
+
+      - uses: dtolnay/rust-toolchain@nightly # zizmor: ignore[unpinned-uses]
+        with:
+          components: clippy
+
       - run: cargo clippy --all-targets
 
   cargo-build-release:
