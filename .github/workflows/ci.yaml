@@ -99,13 +99,14 @@ jobs:
           persist-credentials: false
 
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        if: github.event_name == 'pull_request'
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning]
 
-      - name: "Install Rust toolchain"
-        run: rustup show
+      - uses: dtolnay/rust-toolchain@stable # zizmor: ignore[unpinned-uses]
 
-      - name: "Install mold"
-        if: runner.os == 'Linux'
-        uses: rui314/setup-mold@9c9c13bf4c3f1adef0cc596abc155580bcb04444 # v1
+      - if: runner.os == 'Linux'
+        uses: wild-linker/action@latest # zizmor: ignore[unpinned-uses]
 
       - name: "Build"
         run: cargo build --release
