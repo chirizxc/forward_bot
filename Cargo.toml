@@ -28,7 +28,7 @@ serde = {
     features = ["derive"]
 }
 thiserror = "=2.0.20"
-toml = "=1.1.4"
+toml = "=1.1.5"
 
 [profile.release]
 lto = "fat"
